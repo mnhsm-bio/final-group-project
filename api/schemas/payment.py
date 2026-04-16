@@ -19,5 +19,5 @@ class Payment(PaymentBase):
     card_id: Optional[str] = None
     transaction_status: Optional[str] = None
 
-    class Config:
+    class ConfigDict:
         form_attributes = True
