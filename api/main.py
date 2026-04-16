@@ -4,9 +4,12 @@ from fastapi.middleware.cors import CORSMiddleware
 from .routers import index as indexRoute
 from .models import model_loader
 from .dependencies.config import conf
-
+from .dependencies.database import Base, engine
 
 app = FastAPI()
+
+# Create database tables
+Base.metadata.create_all(bind=engine)
 
 origins = ["*"]
 
