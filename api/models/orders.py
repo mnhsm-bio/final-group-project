@@ -14,6 +14,7 @@ class Order(Base):
 
     order_details = relationship("OrderDetail", back_populates="order")
     payment = relationship("Payment", back_populates="order", uselist=False)
+    review = relationship("Review", back_populates="order", uselist=False)
 
     # Add remaining database design considerations
     tracking_number = Column(String(50), unique=True, nullable=True)
