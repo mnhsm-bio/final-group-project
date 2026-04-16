@@ -13,6 +13,7 @@ class Order(Base):
     description = Column(String(300))
 
     order_details = relationship("OrderDetail", back_populates="order")
+    payment = relationship("Payment", back_populates="order", uselist=False)
 
     # Add remaining database design considerations
     tracking_number = Column(String(50), unique=True, nullable=True)
