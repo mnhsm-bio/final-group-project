@@ -3,7 +3,7 @@ from sqlalchemy.orm import relationship
 from ..dependencies.database import Base
 
 class Payment(Base):
-    __tablename__ = "payment"
+    __tablename__ = "payments"
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     order_id = Column(Integer, ForeignKey('orders.id'))
     card_id = Column(String(4), nullable=True)

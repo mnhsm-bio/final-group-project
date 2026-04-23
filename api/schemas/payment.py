@@ -7,17 +7,17 @@ class PaymentBase(BaseModel):
 
 class PaymentCreate(PaymentBase):
     card_id: Optional[str] = None
-    transaction_status: Optional[str] = None
+    transaction_status: Optional[str] = "pending"
 
 class PaymentUpdate(BaseModel):
     payment_type: Optional[str] = None
     card_id: Optional[str] = None
-    transaction_status: Optional[str] = None
+    transaction_status: Optional[str] = "pending"
 
 class Payment(PaymentBase):
     id: int
     card_id: Optional[str] = None
-    transaction_status: Optional[str] = None
+    transaction_status: Optional[str] = "pending"
 
     class ConfigDict:
-        form_attributes = True
+        from_attributes = True

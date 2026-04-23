@@ -24,7 +24,7 @@ def read_all(db: Session):
     try:
         result = db.query(model.Review).all()
     except SQLAlchemyError as e:
-        error = str(e.__dict++['orig'])
+        error = str(e.__dict__['orig'])
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=error)
     return result
 
@@ -43,7 +43,7 @@ def update(db: Session, item_id, request):
         item = db.query(model.Review).filter(model.Review.id == item_id)
         if not item.first():
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="ID not found")
-        update_data = request.dict(exlude_unset=True)
+        update_data = request.dict(exclude_unset=True)
         item.update(update_data, synchronize_session=False)
         db.commit()
     except SQLAlchemyError as e:
