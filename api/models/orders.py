@@ -20,3 +20,5 @@ class Order(Base):
     tracking_number = Column(String(50), unique=True, nullable=True)
     order_status = Column(String(20), nullable=False, default="Pending")
     total_price = Column(DECIMAL(10, 2), nullable=False, default=0.00)
+    promo_code = Column(String(30), nullable=True)
+    discount_total = Column(DECIMAL(6, 2), nullable=True)

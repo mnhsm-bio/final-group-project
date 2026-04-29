@@ -14,6 +14,8 @@ class OrderCreate(OrderBase):
     tracking_number: Optional[str] = None
     order_status: Optional[str] = "pending"
     total_price: Optional[float] = None
+    promo_code: Optional[str] = None
+    discount_total: Optional[float] = None
 
 
 class OrderUpdate(BaseModel):
@@ -22,6 +24,8 @@ class OrderUpdate(BaseModel):
     tracking_number: Optional[str] = None
     order_status: Optional[str] = None
     total_price: Optional[float] = None
+    promo_code: Optional[str] = None
+    discount_total: Optional[float] = None
 
 
 class Order(OrderBase):
@@ -31,6 +35,8 @@ class Order(OrderBase):
     tracking_number: Optional[str] = None
     order_status: Optional[str] = None
     total_price: Optional[float] = None
+    promo_code: Optional[str] = None
+    discount_total: Optional[float] = None
 
 
     class ConfigDict:
