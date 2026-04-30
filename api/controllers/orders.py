@@ -68,3 +68,25 @@ def delete(db: Session, item_id):
         error = str(e.__dict__['orig'])
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=error)
     return Response(status_code=status.HTTP_204_NO_CONTENT)
+
+def apply_promo(db: Session, order_id: int, promo_code: str):
+    try:
+        order = db.query(model.Order).filter(model.Order.id == order_id).first()
+        if not order:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Error finding your order!")
+        promo = db.query(promo_model.Promotion).filter(promo_model.Promotion.promotion_code == promo_code).first()
+        if not promo:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Promo code is not valid!")
+        if promo.expiration_date < datetime.now(timezone.utc):
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Promo code is outdated!")
+
+        discount_amount = (float(order.total_price) * (float(promo.discount_value) / 100))
+        order.promo_code = promo_code
+        order.discount_total = float(order.total_price) - discount_amount
+        db.commit()
+        db.refresh(order)
+
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=error)
+    return order
