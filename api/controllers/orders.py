@@ -9,6 +9,11 @@ def create(db: Session, request):
         customer_name=request.customer_name,
         description=request.description,
         total_price=request.total_price,
+        tracking_number=request.tracking_number,
+        order_status=request.order_status,
+        promo_code=request.promo_code,
+        discount_total=request.discount_total,
+        customer_id=request.customer_id,
     )
 
     try:

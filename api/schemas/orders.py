@@ -16,6 +16,7 @@ class OrderCreate(OrderBase):
     total_price: Optional[float] = None
     promo_code: Optional[str] = None
     discount_total: Optional[float] = None
+    customer_id: Optional[int] = None
 
 
 class OrderUpdate(BaseModel):
@@ -26,6 +27,7 @@ class OrderUpdate(BaseModel):
     total_price: Optional[float] = None
     promo_code: Optional[str] = None
     discount_total: Optional[float] = None
+    customer_id: Optional[int] = None
 
 
 class Order(OrderBase):
@@ -37,6 +39,7 @@ class Order(OrderBase):
     total_price: Optional[float] = None
     promo_code: Optional[str] = None
     discount_total: Optional[float] = None
+    customer_id: Optional[int] = None
 
 
     class ConfigDict:
