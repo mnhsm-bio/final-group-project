@@ -1,4 +1,5 @@
 from .dependencies.database import SessionLocal
+from .models import model_loader
 from .models import sandwiches as sandwich_model
 from .models import resources as resource_model
 from .models import recipes as recipe_model
@@ -6,6 +7,7 @@ from .models import recipes as recipe_model
 
 
 def seed():
+    model_loader.index()
     db = SessionLocal()
     try:
         # Resources
