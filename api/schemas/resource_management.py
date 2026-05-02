@@ -3,6 +3,7 @@ from pydantic import BaseModel
 
 
 class Resource_ManagementBase(BaseModel):
+    resource_id: int
     resource_amount: int
     unit: str
 
@@ -12,6 +13,7 @@ class Resource_ManagementCreate(Resource_ManagementBase):
 
 
 class Resource_ManagementUpdate(BaseModel):
+    resource_id: Optional[int] = None
     resource_amount: Optional[int] = None
     unit: Optional[str] = None
 
