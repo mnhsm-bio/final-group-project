@@ -1,5 +1,4 @@
-from datetime import datetime
-from typing import Optional
+from typing import Optional, List
 from pydantic import BaseModel
 
 
@@ -20,9 +19,17 @@ class SandwichUpdate(BaseModel):
     calories: Optional[int] = None
     food_category: Optional[str] = None
 
+class IngredientDetail(BaseModel):
+    name: str
+    amount: int
+
+    class ConfigDict:
+        from_attributes = True
+
 
 class Sandwich(SandwichBase):
     id: int
+    ingredients: Optional[List[IngredientDetail]] = []
 
     class ConfigDict:
         from_attributes = True

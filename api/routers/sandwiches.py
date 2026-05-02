@@ -20,6 +20,11 @@ def read_all(db: Session = Depends(get_db)):
     return controller.read_all(db)
 
 
+@router.get("/category/{food_category}", response_model=list[schema.Sandwich])
+def read_by_category(food_category: str, db: Session = Depends(get_db)):
+    return controller.read_by_category(db, food_category=food_category)
+
+
 @router.get("/{item_id}", response_model=schema.Sandwich)
 def read_one(item_id: int, db: Session = Depends(get_db)):
     return controller.read_one(db, item_id=item_id)
