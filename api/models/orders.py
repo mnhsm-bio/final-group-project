@@ -22,3 +22,5 @@ class Order(Base):
     total_price = Column(DECIMAL(10, 2), nullable=False, default=0.00)
     promo_code = Column(String(30), nullable=True)
     discount_total = Column(DECIMAL(6, 2), nullable=True)
+    customer_id = Column(Integer, ForeignKey("customers.id"), nullable=True)
+    customer = relationship("Customer", back_populates="orders")
