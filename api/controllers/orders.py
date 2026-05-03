@@ -99,3 +99,13 @@ def apply_promo(db: Session, order_id: int, promo_code: str):
         error = str(e.__dict__['orig'])
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=error)
     return order
+
+def read_by_tracking(db: Session, tracking_number: str):
+    try:
+        item = db.query(model.Order).filter(model.Order.tracking_number == tracking_number).first()
+        if not item:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Tracking number not found!")
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=error)
+    return item
