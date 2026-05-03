@@ -20,3 +20,11 @@ class Payment(PaymentBase):
 
     class ConfigDict:
         from_attributes = True
+
+class PaymentWithTotal(PaymentBase):
+    card_id: Optional[str] = None
+    transaction_status: Optional[str] = "pending"
+    total_price: Optional[float] = None
+
+    class ConfigDict:
+        from_attributes = True
