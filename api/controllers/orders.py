@@ -75,6 +75,9 @@ def delete(db: Session, item_id):
     return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 def apply_promo(db: Session, order_id: int, promo_code: str):
+    from ..models import promotions as promo_model
+    from datetime import datetime, timezone
+
     try:
         order = db.query(model.Order).filter(model.Order.id == order_id).first()
         if not order:
@@ -82,7 +85,7 @@ def apply_promo(db: Session, order_id: int, promo_code: str):
         promo = db.query(promo_model.Promotion).filter(promo_model.Promotion.promotion_code == promo_code).first()
         if not promo:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Promo code is not valid!")
-        if promo.expiration_date < datetime.now(timezone.utc):
+        if promo.expiration_date < datetime.now():
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Promo code is outdated!")
 
         discount_amount = (float(order.total_price) * (float(promo.discount_value) / 100))
