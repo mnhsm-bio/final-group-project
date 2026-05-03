@@ -2,7 +2,8 @@ from sqlalchemy.orm import Session
 from fastapi import HTTPException, status, Response, Depends
 from ..models import orders as model
 from sqlalchemy.exc import SQLAlchemyError
-
+from datetime import date
+from sqlalchemy import func
 
 def create(db: Session, request):
     new_item = model.Order(
@@ -109,3 +110,16 @@ def read_by_tracking(db: Session, tracking_number: str):
         error = str(e.__dict__['orig'])
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=error)
     return item
+
+def read_by_date_range(db: Session, begin_date: date, end_date: date):
+    try:
+        result = db.query(model.Order).filter(
+            func.date(model.Order.order_date) >= begin_date,
+            func.date(model.Order.order_date) <= end_date
+        ).all()
+        if not result:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="No orders found in this date range!")
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=error)
+    return result
