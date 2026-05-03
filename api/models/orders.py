@@ -24,3 +24,4 @@ class Order(Base):
     discount_total = Column(DECIMAL(6, 2), nullable=True)
     customer_id = Column(Integer, ForeignKey("customers.id"), nullable=True)
     customer = relationship("Customer", back_populates="orders")
+    order_type = Column(String(20), nullable=False, default="takeout")
