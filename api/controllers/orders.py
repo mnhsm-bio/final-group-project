@@ -14,6 +14,7 @@ def create(db: Session, request):
         promo_code=request.promo_code,
         discount_total=request.discount_total,
         customer_id=request.customer_id,
+        order_type=request.order_type
     )
 
     try:
