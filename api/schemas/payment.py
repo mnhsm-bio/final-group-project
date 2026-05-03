@@ -12,10 +12,9 @@ class PaymentCreate(PaymentBase):
 class PaymentUpdate(BaseModel):
     payment_type: Optional[str] = None
     card_id: Optional[str] = None
-    transaction_status: Optional[str] = "pending"
+    transaction_status: Optional[str] = None
 
 class Payment(PaymentBase):
-    id: int
     card_id: Optional[str] = None
     transaction_status: Optional[str] = "pending"
 

@@ -27,21 +27,21 @@ def read_all(db: Session):
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=error)
     return result
 
-def read_one(db: Session, item_id):
+def read_by_order(db: Session, order_id: int):
     try:
-        item = db.query(model.Payment).filter(model.Payment.id == item_id).first()
+        item = db.query(model.Payment).filter(model.Payment.order_id == order_id).first()
         if not item:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Id not found!")
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="No payment found for this order!")
     except SQLAlchemyError as e:
         error = str(e.__dict__['orig'])
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=error)
     return item
 
-def update(db: Session, item_id, request):
+def update(db: Session, order_id: int, request):
     try:
-        item = db.query(model.Payment).filter(model.Payment.id == item_id)
+        item = db.query(model.Payment).filter(model.Payment.order_id == order_id)
         if not item.first():
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="ID not found")
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="No payment found for this order!")
         update_data = request.dict(exclude_unset=True)
         item.update(update_data, synchronize_session=False)
         db.commit()
@@ -50,11 +50,11 @@ def update(db: Session, item_id, request):
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=error)
     return item.first()
 
-def delete(db: Session, item_id):
+def delete(db: Session, order_id: int):
     try:
-        item = db.query(model.Payment).filter(model.Payment.id == item_id)
+        item = db.query(model.Payment).filter(model.Payment.order_id == order_id)
         if not item.first():
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="ID not found")
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="No payment found for this order!")
         item.delete(synchronize_session=False)
         db.commit()
     except SQLAlchemyError as e:
