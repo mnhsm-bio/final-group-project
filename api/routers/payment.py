@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 from ..controllers import payment as controller
 from ..schemas import payment as schema
 from ..dependencies.database import get_db
+from datetime import date
 
 router = APIRouter(
     tags=["Payment"],
@@ -17,6 +18,10 @@ def create(order_id: int, request: schema.PaymentCreate, db: Session = Depends(g
 @router.get("/", response_model=list[schema.Payment])
 def read_all(db: Session = Depends(get_db)):
     return controller.read_all(db)
+
+@router.get("/date/{target_date}", response_model=list[schema.PaymentWithTotal])
+def read_by_date(target_date: date, db: Session = Depends(get_db)):
+    return controller.read_by_date(db, target_date=target_date)
 
 @router.get("/{order_id}", response_model=schema.Payment)
 def read_by_order(order_id: int, db: Session = Depends(get_db)):
