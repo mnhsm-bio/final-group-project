@@ -2,7 +2,8 @@ from sqlalchemy.orm import Session
 from fastapi import HTTPException, status, Response, Depends
 from ..models import orders as model
 from sqlalchemy.exc import SQLAlchemyError
-
+from datetime import date
+from sqlalchemy import func
 
 def create(db: Session, request):
     new_item = model.Order(
@@ -14,6 +15,7 @@ def create(db: Session, request):
         promo_code=request.promo_code,
         discount_total=request.discount_total,
         customer_id=request.customer_id,
+        order_type=request.order_type
     )
 
     try:
@@ -75,6 +77,9 @@ def delete(db: Session, item_id):
     return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 def apply_promo(db: Session, order_id: int, promo_code: str):
+    from ..models import promotions as promo_model
+    from datetime import datetime, timezone
+
     try:
         order = db.query(model.Order).filter(model.Order.id == order_id).first()
         if not order:
@@ -82,7 +87,7 @@ def apply_promo(db: Session, order_id: int, promo_code: str):
         promo = db.query(promo_model.Promotion).filter(promo_model.Promotion.promotion_code == promo_code).first()
         if not promo:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Promo code is not valid!")
-        if promo.expiration_date < datetime.now(timezone.utc):
+        if promo.expiration_date < datetime.now():
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Promo code is outdated!")
 
         discount_amount = (float(order.total_price) * (float(promo.discount_value) / 100))
@@ -95,3 +100,26 @@ def apply_promo(db: Session, order_id: int, promo_code: str):
         error = str(e.__dict__['orig'])
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=error)
     return order
+
+def read_by_tracking(db: Session, tracking_number: str):
+    try:
+        item = db.query(model.Order).filter(model.Order.tracking_number == tracking_number).first()
+        if not item:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Tracking number not found!")
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=error)
+    return item
+
+def read_by_date_range(db: Session, begin_date: date, end_date: date):
+    try:
+        result = db.query(model.Order).filter(
+            func.date(model.Order.order_date) >= begin_date,
+            func.date(model.Order.order_date) <= end_date
+        ).all()
+        if not result:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="No orders found in this date range!")
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=error)
+    return result
